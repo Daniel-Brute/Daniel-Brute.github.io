@@ -86,7 +86,15 @@
       
 
       
-      <h1 id="1-配置Dubbo服务消费"><a href="#1-配置Dubbo服务消费" class="headerlink" title="1 配置Dubbo服务消费"></a>1 配置Dubbo服务消费</h1><h2 id="1-1-XML配置方式"><a href="#1-1-XML配置方式" class="headerlink" title="1.1 XML配置方式"></a>1.1 XML配置方式</h2><h2 id="1-2-注解配置方式"><a href="#1-2-注解配置方式" class="headerlink" title="1.2 注解配置方式"></a>1.2 注解配置方式</h2><h1 id="2-服务消费源码分析"><a href="#2-服务消费源码分析" class="headerlink" title="2 服务消费源码分析"></a>2 服务消费源码分析</h1>
+      <h1 id="1-配置依赖"><a href="#1-配置依赖" class="headerlink" title="1 配置依赖"></a>1 配置依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;dubbo-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="2-配置Dubbo服务消费"><a href="#2-配置Dubbo服务消费" class="headerlink" title="2 配置Dubbo服务消费"></a>2 配置Dubbo服务消费</h1><h2 id="2-1-XML配置方式"><a href="#2-1-XML配置方式" class="headerlink" title="2.1 XML配置方式"></a>2.1 XML配置方式</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:dubbo</span>=<span class="string">"http://dubbo.apache.org/schema/dubbo"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--dubbo服务的应用名称--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:application</span> <span class="attr">name</span>=<span class="string">"demo-consumer"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--注册地址--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:registry</span> <span class="attr">group</span>=<span class="string">"aaa"</span> <span class="attr">address</span>=<span class="string">"zookeeper://127.0.0.1:2181"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--调用的服务也能用，check表示调用失败之后不重试--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">id</span>=<span class="string">"demoService"</span> <span class="attr">check</span>=<span class="string">"false"</span> <span class="attr">interface</span>=<span class="string">"org.apache.dubbo.samples.basic.api.DemoService"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-注解配置方式"><a href="#2-2-注解配置方式" class="headerlink" title="2.2 注解配置方式"></a>2.2 注解配置方式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">消费服务</span><br><span class="line"><span class="meta">@Autoware</span></span><br><span class="line"><span class="keyword">private</span> XXXX xxxx;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="3-服务消费源码分析"><a href="#3-服务消费源码分析" class="headerlink" title="3 服务消费源码分析"></a>3 服务消费源码分析</h1><p>参考网址：<a href="http://dubbo.apache.org/zh-cn/index.html" target="_blank" rel="noopener">http://dubbo.apache.org/zh-cn/index.html</a></p>
+
       
       <!-- reward -->
       
@@ -172,11 +180,11 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/06/13/hello-world/" class="article-nav-link">
+      <a href="/2020/06/13/hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            Hello World
+            hexo搭建个人网站
           
         </div>
       </a>

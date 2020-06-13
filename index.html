@@ -75,6 +75,80 @@
     
     
     
+    <article id="post-Spring循环依赖解决方案" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/06/14/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"
+    >Spring循环依赖解决方案</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/06/14/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="article-date">
+  <time datetime="2020-06-13T23:47:34.000Z" itemprop="datePublished">2020-06-13</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/spring/">spring</a>
+  </div>
+
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><p>在XML配置依赖项的时候，当出现以下情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>或者在使用标签注解时出现以下情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那么这两种情况成为循环依赖。Spring在装配出现循环依赖时会出现抛出异常</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h1 id="源码解读"><a href="#源码解读" class="headerlink" title="源码解读"></a>源码解读</h1>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="tag">循环依赖解决方案</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+  
+  
+
+</article>
+    
     <article id="post-hexo搭建个人网站" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -241,80 +315,6 @@
 
 </article>
     
-    <article id="post-hello-world" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/06/13/hello-world/"
-    >Hello World</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/06/13/hello-world/" class="article-date">
-  <time datetime="2020-06-13T15:15:03.125Z" itemprop="datePublished">2020-06-13</time>
-</a>
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-
-  
-  
-  
-
-</article>
-    
     <article id="post-Dubbo之服务消费" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -353,7 +353,15 @@
       
 
       
-      <h1 id="1-配置Dubbo服务消费"><a href="#1-配置Dubbo服务消费" class="headerlink" title="1 配置Dubbo服务消费"></a>1 配置Dubbo服务消费</h1><h2 id="1-1-XML配置方式"><a href="#1-1-XML配置方式" class="headerlink" title="1.1 XML配置方式"></a>1.1 XML配置方式</h2><h2 id="1-2-注解配置方式"><a href="#1-2-注解配置方式" class="headerlink" title="1.2 注解配置方式"></a>1.2 注解配置方式</h2><h1 id="2-服务消费源码分析"><a href="#2-服务消费源码分析" class="headerlink" title="2 服务消费源码分析"></a>2 服务消费源码分析</h1>
+      <h1 id="1-配置依赖"><a href="#1-配置依赖" class="headerlink" title="1 配置依赖"></a>1 配置依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;dubbo-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="2-配置Dubbo服务消费"><a href="#2-配置Dubbo服务消费" class="headerlink" title="2 配置Dubbo服务消费"></a>2 配置Dubbo服务消费</h1><h2 id="2-1-XML配置方式"><a href="#2-1-XML配置方式" class="headerlink" title="2.1 XML配置方式"></a>2.1 XML配置方式</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:dubbo</span>=<span class="string">"http://dubbo.apache.org/schema/dubbo"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--dubbo服务的应用名称--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:application</span> <span class="attr">name</span>=<span class="string">"demo-consumer"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--注册地址--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:registry</span> <span class="attr">group</span>=<span class="string">"aaa"</span> <span class="attr">address</span>=<span class="string">"zookeeper://127.0.0.1:2181"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--调用的服务也能用，check表示调用失败之后不重试--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">id</span>=<span class="string">"demoService"</span> <span class="attr">check</span>=<span class="string">"false"</span> <span class="attr">interface</span>=<span class="string">"org.apache.dubbo.samples.basic.api.DemoService"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-注解配置方式"><a href="#2-2-注解配置方式" class="headerlink" title="2.2 注解配置方式"></a>2.2 注解配置方式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">消费服务</span><br><span class="line"><span class="meta">@Autoware</span></span><br><span class="line"><span class="keyword">private</span> XXXX xxxx;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="3-服务消费源码分析"><a href="#3-服务消费源码分析" class="headerlink" title="3 服务消费源码分析"></a>3 服务消费源码分析</h1><p>参考网址：<a href="http://dubbo.apache.org/zh-cn/index.html" target="_blank" rel="noopener">http://dubbo.apache.org/zh-cn/index.html</a></p>
+
       
       <!-- reward -->
       
@@ -420,7 +428,23 @@
       
 
       
-      <h1 id="1-配置Dubbo服务暴露"><a href="#1-配置Dubbo服务暴露" class="headerlink" title="1 配置Dubbo服务暴露"></a>1 配置Dubbo服务暴露</h1><h2 id="1-1-XML配置方式"><a href="#1-1-XML配置方式" class="headerlink" title="1.1 XML配置方式"></a>1.1 XML配置方式</h2><h2 id="1-2-注解配置方式"><a href="#1-2-注解配置方式" class="headerlink" title="1.2 注解配置方式"></a>1.2 注解配置方式</h2><h1 id="2-服务暴露源码分析"><a href="#2-服务暴露源码分析" class="headerlink" title="2 服务暴露源码分析"></a>2 服务暴露源码分析</h1>
+      <h1 id="1-配置依赖"><a href="#1-配置依赖" class="headerlink" title="1 配置依赖"></a>1 配置依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;dubbo-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="2-配置Dubbo服务暴露"><a href="#2-配置Dubbo服务暴露" class="headerlink" title="2 配置Dubbo服务暴露"></a>2 配置Dubbo服务暴露</h1><h2 id="2-1-XML配置方式"><a href="#2-1-XML配置方式" class="headerlink" title="2.1 XML配置方式"></a>2.1 XML配置方式</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:dubbo</span>=<span class="string">"http://dubbo.apache.org/schema/dubbo"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--dubbo暴露的服务名称--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:application</span> <span class="attr">name</span>=<span class="string">"demo-provider"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--注册中心地址--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:registry</span> <span class="attr">address</span>=<span class="string">"zookeeper://127.0.0.1:2181"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--服务暴漏使用的端口--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:protocol</span> <span class="attr">name</span>=<span class="string">"dubbo"</span> <span class="attr">port</span>=<span class="string">"20890"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--对象的引用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"demoService"</span> <span class="attr">class</span>=<span class="string">"org.apache.dubbo.samples.basic.impl.DemoServiceImpl"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--暴露服务--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">"org.apache.dubbo.samples.basic.api.DemoService"</span> <span class="attr">ref</span>=<span class="string">"demoService"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-注解配置方式"><a href="#2-2-注解配置方式" class="headerlink" title="2.2 注解配置方式"></a>2.2 注解配置方式</h2><ul>
+<li>暴露服务</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XXXX</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>扫描注解暴露服务的报名</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"package的路径"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：dubbo的@Service和Spring的@Service不能同时使用，如果出现需要同时配置时，可以使用XML配置服务消费者</p>
+<h1 id="3-服务暴露源码分析"><a href="#3-服务暴露源码分析" class="headerlink" title="3 服务暴露源码分析"></a>3 服务暴露源码分析</h1><p>参考网址：<a href="http://dubbo.apache.org/zh-cn/index.html" target="_blank" rel="noopener">http://dubbo.apache.org/zh-cn/index.html</a></p>
+
       
       <!-- reward -->
       
