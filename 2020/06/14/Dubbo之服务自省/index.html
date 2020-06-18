@@ -86,7 +86,41 @@
       
 
       
-      <h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h1><h1 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h1><h1 id="3-使用方式"><a href="#3-使用方式" class="headerlink" title="3 使用方式"></a>3 使用方式</h1><h1 id="4-源码分析"><a href="#4-源码分析" class="headerlink" title="4 源码分析"></a>4 源码分析</h1>
+      <h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h1><p>dubbo面临的挑战：<br>1、如何解决或者缓解注册中心压力过载：内存、网络和通知<br>2、如何支持以应用为力度的服务注册与发现：支持SpringCloud、Kubernates和兼容Dubbo传统服务注册与发现。<br>3、如何精简dubbo URL元数据：将不变的数据放到元数据中心</p>
+<p>起源：<br>JavaBeans自省：At runtime and in the builder environment we need to be able to figure out which properties, event, and methods a java Bean supports. we call this proccess instrospection.</p>
+<p>定义：Dubbo应用在运行时处理和分析Dubbo服务源信息的过程。如当前应用暴露的Dubbo服务以及各自通讯协议等。期间会伴随着时间的广播和处理，如服务暴露事件。</p>
+<p>服务自省架构定义：</p>
+<p>Service：SOA或者微服务中的“服务”，或者称之为“应用”，具有全局唯一的名称。</p>
+<p>ServiceName：服务名称，或者应用名称。</p>
+<p>Service Instance：服务实例，或者称应用实例（Application Instance），表示单个Dubbo应用进程。</p>
+<p>Registry：注册中心</p>
+<p>Dubbo服务：又称之为“Dubbo业务服务”，包括Java接口、通讯协议、版本（version）和分组（group）等元信息。</p>
+<p>Dubbo服务ID：唯一鉴定Dubbo服务的元数据，用于Dubbo服务暴漏（发布）和订阅。</p>
+<p>Provider：Dubbo服务提供方</p>
+<p>Consumer：Dubbo服务消费方</p>
+<p>Dubbo服务暴露：也称之为Dubbo服务发布，或者英文中的“export”，“exported”</p>
+<p>Dubbo应用服务：也称之为Dubbo业务服务，或业务Dubbo服务</p>
+<p>使用场景：</p>
+<ul>
+<li>超大规模Dubbo服务治理场景</li>
+</ul>
+<p>如果Dubbo集群规模超过一千以上，或者集群扩缩容已无法自如地执行，如zk管理数万Dubbo服务，服务自省可以极大化减轻注册中心地压力，尤其在内存足迹、网络传输以及变更通知上体现。</p>
+<ul>
+<li>微服务架构和元原生应用</li>
+</ul>
+<p>如果想要Dubbo应用更好地微服务化，或者更接近于云原生应用，那么服务自省是一种不错的选择，它能够提供以应用为粒度的服务注册与发现模型，全面地支持最流行地Spring Cloud和Kubernates注册中心，并且能够与Spring Cloud或Spring Boot应用交互。</p>
+<ul>
+<li>Dubbo元数据架构的基石</li>
+</ul>
+<p>Dubbo元数据架构是围绕Dubbo DevOps而引入的，包括Dubbo配置元数据（如：配置属性、路由规则等）和机构元数据（如Java注解、接口和文档等）。服务自省作为Dubbo元数据的基础设施，不仅支持所有的存储和平滑升级，而且不会对注册中心和元数据中心产生额外的负担。</p>
+<ul>
+<li>传统架构</li>
+</ul>
+<p>是一款面向接口的代理的高性能RPC框架，提供服务注册于发现的特性，其基础架构如下图所示：<br><img src alt></p>
+<h1 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h1><h1 id="3-使用方式"><a href="#3-使用方式" class="headerlink" title="3 使用方式"></a>3 使用方式</h1><h1 id="4-源码分析"><a href="#4-源码分析" class="headerlink" title="4 源码分析"></a>4 源码分析</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料:"></a>参考资料:</h1><blockquote>
+<p>1.</p>
+</blockquote>
+
       
       <!-- reward -->
       
@@ -171,6 +205,15 @@
   
   
   <nav class="article-nav">
+    
+      <a href="/2020/06/18/IDEA%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            IDEA插件开发
+          
+        </div>
+      </a>
     
     
       <a href="/2020/06/14/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="article-nav-link">
