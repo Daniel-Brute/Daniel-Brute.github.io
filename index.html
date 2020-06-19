@@ -75,6 +75,73 @@
     
     
     
+    <article id="post-Dubbo的集群策略（Cluster）" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/06/20/Dubbo%E7%9A%84%E9%9B%86%E7%BE%A4%E7%AD%96%E7%95%A5%EF%BC%88Cluster%EF%BC%89/"
+    >Dubbo的集群策略（Cluster）</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/06/20/Dubbo%E7%9A%84%E9%9B%86%E7%BE%A4%E7%AD%96%E7%95%A5%EF%BC%88Cluster%EF%BC%89/" class="article-date">
+  <time datetime="2020-06-19T19:21:47.000Z" itemprop="datePublished">2020-06-19</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Dubbo/">Dubbo</a>
+  </div>
+
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dubbo%E7%9A%84%E9%9B%86%E7%BE%A4%E7%AD%96%E7%95%A5%EF%BC%88Cluster%EF%BC%89/" rel="tag">Dubbo的集群策略（Cluster）</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+  
+  
+
+</article>
+    
     <article id="post-Spring状态机" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -260,15 +327,18 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.dubbo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.7.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h1 id="2-负载均衡的源码实现"><a href="#2-负载均衡的源码实现" class="headerlink" title="2 负载均衡的源码实现"></a>2 负载均衡的源码实现</h1><h2 id="2-1-接口定义"><a href="#2-1-接口定义" class="headerlink" title="2.1 接口定义"></a>2.1 接口定义</h2><p>在dubbo 2.7.5中，负载均衡的接口如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * LoadBalance. (SPI, Singleton, ThreadSafe)</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * &lt;a href="http://en.wikipedia.org/wiki/Load_balancing_(computing)"&gt;Load-Balancing&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.apache.dubbo.rpc.cluster.Cluster#join(Directory)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SPI</span>(RandomLoadBalance.NAME)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LoadBalance</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * select one invoker in list.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invokers   invokers.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> url        refer url</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invocation invocation.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> selected invoker.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Adaptive</span>(<span class="string">"loadbalance"</span>)</span><br><span class="line">    &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * LoadBalance. (SPI, Singleton, ThreadSafe)</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * &lt;a href="http://en.wikipedia.org/wiki/Load_balancing_(computing)"&gt;Load-Balancing&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.apache.dubbo.rpc.cluster.Cluster#join(Directory)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SPI</span>(RandomLoadBalance.NAME)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LoadBalance</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * select one invoker in list.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Adaptive</span>(<span class="string">"loadbalance"</span>)</span><br><span class="line">    &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可以看出负载均衡的加载机制使用的是SPI机制，且默认的使用的是随机的负载均衡加载策略：</p>
 <p>@Adaptive(“loadbalance”)说明了根据配置参数loadbalance传入的值可以自适应地选择不同的负载均衡策略。</p>
 <p>在dubbo中LoadBalance接口有一个默认的LoadBalance实现类，即AbstractLoadBalance方法，如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractLoadBalance</span> <span class="keyword">implements</span> <span class="title">LoadBalance</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据预热时间的正常运行时间比例计算权重，新权重将在1（含）到weight（含）之间</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> uptime 正常运行时间（毫秒级）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> warmup 预热时间（毫秒级）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> weight 一个invoker的权重</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 预热权重</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">calculateWarmupWeight</span><span class="params">(<span class="keyword">int</span> uptime, <span class="keyword">int</span> warmup, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ww = (<span class="keyword">int</span>) ( uptime / ((<span class="keyword">float</span>) warmup / weight));</span><br><span class="line">        <span class="keyword">return</span> ww &lt; <span class="number">1</span> ? <span class="number">1</span> : (Math.min(ww, weight));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(invokers)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (invokers.size() == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> invokers.get(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> doSelect(invokers, url, invocation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 如果运行时间小于预热时间 ，获取invoker的预热权重，权重会按比例减少。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invoker    the invoker</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invocation 当前invoker的调用</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 权重</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(Invoker&lt;?&gt; invoker, Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> weight = <span class="number">0</span>;</span><br><span class="line">        URL url = invoker.getUrl();</span><br><span class="line">        <span class="comment">// Multiple registry scenario, load balance among multiple registries.</span></span><br><span class="line">        <span class="comment">// 如果是多注册表场景，需要做多个注册表之间的负载平衡。</span></span><br><span class="line">        <span class="keyword">if</span> (url.getServiceInterface().equals(<span class="string">"org.apache.dubbo.registry.RegistryService"</span>)) &#123;</span><br><span class="line">            <span class="comment">// 获取registry.weight值，如果不存在，默认是100</span></span><br><span class="line">            weight = url.getParameter(REGISTRY_KEY + <span class="string">"."</span> + WEIGHT_KEY, DEFAULT_WEIGHT);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果是单场景注册，获取权重值</span></span><br><span class="line">            weight = url.getMethodParameter(invocation.getMethodName(), WEIGHT_KEY, DEFAULT_WEIGHT);</span><br><span class="line">            <span class="keyword">if</span> (weight &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// 获取timestamp参数值</span></span><br><span class="line">                <span class="keyword">long</span> timestamp = invoker.getUrl().getParameter(TIMESTAMP_KEY, <span class="number">0L</span>);</span><br><span class="line">                <span class="keyword">if</span> (timestamp &gt; <span class="number">0L</span>) &#123;</span><br><span class="line">                    <span class="comment">// 获得运行时间</span></span><br><span class="line">                    <span class="keyword">long</span> uptime = System.currentTimeMillis() - timestamp;</span><br><span class="line">                    <span class="keyword">if</span> (uptime &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 获取预热参数值</span></span><br><span class="line">                    <span class="keyword">int</span> warmup = invoker.getUrl().getParameter(WARMUP_KEY, DEFAULT_WARMUP);</span><br><span class="line">                    <span class="keyword">if</span> (uptime &gt; <span class="number">0</span> &amp;&amp; uptime &lt; warmup) &#123;</span><br><span class="line">                        <span class="comment">// 计算获得预热权重</span></span><br><span class="line">                        weight = calculateWarmupWeight((<span class="keyword">int</span>)uptime, warmup, weight);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Math.max(weight, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractLoadBalance</span> <span class="keyword">implements</span> <span class="title">LoadBalance</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据预热时间的正常运行时间比例计算权重，新权重将在1（含）到weight（含）之间</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> uptime 正常运行时间（毫秒级）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> warmup 预热时间（毫秒级）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> weight 一个invoker的权重</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 预热权重</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">calculateWarmupWeight</span><span class="params">(<span class="keyword">int</span> uptime, <span class="keyword">int</span> warmup, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ww = (<span class="keyword">int</span>) ( uptime / ((<span class="keyword">float</span>) warmup / weight));</span><br><span class="line">        <span class="keyword">return</span> ww &lt; <span class="number">1</span> ? <span class="number">1</span> : (Math.min(ww, weight));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(invokers)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 只有一个invoker时，直接返回，不需要负载均衡</span></span><br><span class="line">        <span class="keyword">if</span> (invokers.size() == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> invokers.get(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 由子类实现doSelect钩子方法进行负载均衡</span></span><br><span class="line">        <span class="keyword">return</span> doSelect(invokers, url, invocation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 如果运行时间小于预热时间 ，获取invoker的预热权重，权重会按比例减少。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invoker    the invoker</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invocation 当前invoker的调用</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 权重</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getWeight</span><span class="params">(Invoker&lt;?&gt; invoker, Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> weight = <span class="number">0</span>;</span><br><span class="line">        URL url = invoker.getUrl();</span><br><span class="line">        <span class="comment">// Multiple registry scenario, load balance among multiple registries.</span></span><br><span class="line">        <span class="comment">// 如果是多注册表场景，需要做多个注册表之间的负载平衡。</span></span><br><span class="line">        <span class="keyword">if</span> (url.getServiceInterface().equals(<span class="string">"org.apache.dubbo.registry.RegistryService"</span>)) &#123;</span><br><span class="line">            <span class="comment">// 获取registry.weight值，如果不存在，默认是100</span></span><br><span class="line">            weight = url.getParameter(REGISTRY_KEY + <span class="string">"."</span> + WEIGHT_KEY, DEFAULT_WEIGHT);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果是单场景注册，获取权重值</span></span><br><span class="line">            weight = url.getMethodParameter(invocation.getMethodName(), WEIGHT_KEY, DEFAULT_WEIGHT);</span><br><span class="line">            <span class="keyword">if</span> (weight &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// 获取timestamp参数值</span></span><br><span class="line">                <span class="keyword">long</span> timestamp = invoker.getUrl().getParameter(TIMESTAMP_KEY, <span class="number">0L</span>);</span><br><span class="line">                <span class="keyword">if</span> (timestamp &gt; <span class="number">0L</span>) &#123;</span><br><span class="line">                    <span class="comment">// 获得运行时间</span></span><br><span class="line">                    <span class="keyword">long</span> uptime = System.currentTimeMillis() - timestamp;</span><br><span class="line">                    <span class="keyword">if</span> (uptime &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 获取预热参数值</span></span><br><span class="line">                    <span class="keyword">int</span> warmup = invoker.getUrl().getParameter(WARMUP_KEY, DEFAULT_WARMUP);</span><br><span class="line">                    <span class="keyword">if</span> (uptime &gt; <span class="number">0</span> &amp;&amp; uptime &lt; warmup) &#123;</span><br><span class="line">                        <span class="comment">// 计算获得预热权重</span></span><br><span class="line">                        weight = calculateWarmupWeight((<span class="keyword">int</span>)uptime, warmup, weight);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Math.max(weight, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>可以看到AbstractLoadBalance里面实现了当程序运行时，可以在预热期间获得权重值，即在运行之初，会减小当前Invoker分配到url中参数，进而运行服务的权重。</p>
+<p>可以看到AbstractLoadBalance里面实现了当程序运行时，可以在预热期间获得权重值，即在运行之初，会减小当前Invoker分配到url中的参数，进而运行服务运行权的权重。</p>
+<p>为什么要预热，jvm运行时会对字节码进行优化，刚启动的字节码肯定不是最优的。或者是提供者本身有其他缓存需要初始化之类的。所以预热是有必要的。不能一启动就和其他提供者承受同样流量，可能效率会变慢。</p>
 <h2 id="2-2-LoadBalance在dubbo中的位置"><a href="#2-2-LoadBalance在dubbo中的位置" class="headerlink" title="2.2 LoadBalance在dubbo中的位置"></a>2.2 LoadBalance在dubbo中的位置</h2><p><img src="/Daniel-Brute.github.io/2020/06/18/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%BA%E5%88%B6%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arch.png" alt></p>
-<h2 id="2-3-dubbo中其他的LoadBalance"><a href="#2-3-dubbo中其他的LoadBalance" class="headerlink" title="2.3 dubbo中其他的LoadBalance"></a>2.3 dubbo中其他的LoadBalance</h2><p>dubbo中有四种负载均衡的测录，但是均继承于AbstractLoadBalance抽象类，</p>
+<p>由LoadBalance接口中的@see可以看出，负载均衡的调用是在Cluster的join(Directory)方法中使用。</p>
+<p>详细内容请见</p>
+<h2 id="2-3-dubbo中其他的LoadBalanceWW"><a href="#2-3-dubbo中其他的LoadBalanceWW" class="headerlink" title="2.3 dubbo中其他的LoadBalanceWW"></a>2.3 dubbo中其他的LoadBalanceWW</h2><p>dubbo中有四种负载均衡的测录，但是均继承于AbstractLoadBalance抽象类，</p>
 <ul>
 <li>1）随机负载均衡</li>
 </ul>
@@ -297,6 +367,11 @@
 <blockquote>
 <ol start="2">
 <li><a href="https://github.com/apache/dubbo/tree/dubbo-2.7.5">https://github.com/apache/dubbo/tree/dubbo-2.7.5</a></li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li><a href="https://www.jianshu.com/p/fa1f101b4d23" target="_blank" rel="noopener">https://www.jianshu.com/p/fa1f101b4d23</a></li>
 </ol>
 </blockquote>
 
@@ -920,94 +995,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dubbo%E6%9C%8D%E5%8A%A1%E6%B6%88%E8%B4%B9/" rel="tag">Dubbo服务消费</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-
-  
-  
-  
-
-</article>
-    
-    <article id="post-Dubbo之服务暴露" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/30/Dubbo%E4%B9%8B%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2/"
-    >Dubbo之服务暴露</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/30/Dubbo%E4%B9%8B%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2/" class="article-date">
-  <time datetime="2020-04-30T00:51:15.000Z" itemprop="datePublished">2020-04-30</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Dubbo/">Dubbo</a>
-  </div>
-
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="1-配置依赖"><a href="#1-配置依赖" class="headerlink" title="1 配置依赖"></a>1 配置依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;dubbo-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="2-配置Dubbo服务暴露"><a href="#2-配置Dubbo服务暴露" class="headerlink" title="2 配置Dubbo服务暴露"></a>2 配置Dubbo服务暴露</h1><h2 id="2-1-XML配置方式"><a href="#2-1-XML配置方式" class="headerlink" title="2.1 XML配置方式"></a>2.1 XML配置方式</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:dubbo</span>=<span class="string">"http://dubbo.apache.org/schema/dubbo"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--dubbo暴露的服务名称--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:application</span> <span class="attr">name</span>=<span class="string">"demo-provider"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--注册中心地址--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:registry</span> <span class="attr">address</span>=<span class="string">"zookeeper://127.0.0.1:2181"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--服务暴漏使用的端口--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:protocol</span> <span class="attr">name</span>=<span class="string">"dubbo"</span> <span class="attr">port</span>=<span class="string">"20890"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--对象的引用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"demoService"</span> <span class="attr">class</span>=<span class="string">"org.apache.dubbo.samples.basic.impl.DemoServiceImpl"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--暴露服务--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">"org.apache.dubbo.samples.basic.api.DemoService"</span> <span class="attr">ref</span>=<span class="string">"demoService"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2-2-注解配置方式"><a href="#2-2-注解配置方式" class="headerlink" title="2.2 注解配置方式"></a>2.2 注解配置方式</h2><ul>
-<li>暴露服务</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XXXX</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>扫描注解暴露服务的报名</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"package的路径"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：dubbo的@Service和Spring的@Service不能同时使用，如果出现需要同时配置时，可以使用XML配置服务消费者</p>
-<h1 id="3-服务暴露源码分析"><a href="#3-服务暴露源码分析" class="headerlink" title="3 服务暴露源码分析"></a>3 服务暴露源码分析</h1><p>参考资料：</p>
-<blockquote>
-<ol>
-<li><a href="http://dubbo.apache.org/zh-cn/index.html" target="_blank" rel="noopener">http://dubbo.apache.org/zh-cn/index.html</a></li>
-</ol>
-</blockquote>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dubbo%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2/" rel="tag">Dubbo服务暴露</a></li></ul>
 
 
     </footer>
