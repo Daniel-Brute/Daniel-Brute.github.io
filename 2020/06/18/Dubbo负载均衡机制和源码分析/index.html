@@ -101,7 +101,6 @@
 <p>为什么要预热，jvm运行时会对字节码进行优化，刚启动的字节码肯定不是最优的。或者是提供者本身有其他缓存需要初始化之类的。所以预热是有必要的。不能一启动就和其他提供者承受同样流量，可能效率会变慢。</p>
 <h2 id="2-2-LoadBalance在dubbo中的位置"><a href="#2-2-LoadBalance在dubbo中的位置" class="headerlink" title="2.2 LoadBalance在dubbo中的位置"></a>2.2 LoadBalance在dubbo中的位置</h2><p><img src="/Daniel-Brute.github.io/2020/06/18/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%BA%E5%88%B6%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/arch.png" alt></p>
 <p>由LoadBalance接口中的@see可以看出，负载均衡的调用是在Cluster的join(Directory)方法中使用。</p>
-<p>详细内容请见</p>
 <h2 id="2-3-dubbo中其他的LoadBalanceWW"><a href="#2-3-dubbo中其他的LoadBalanceWW" class="headerlink" title="2.3 dubbo中其他的LoadBalanceWW"></a>2.3 dubbo中其他的LoadBalanceWW</h2><p>dubbo中有四种负载均衡的测录，但是均继承于AbstractLoadBalance抽象类，</p>
 <ul>
 <li>1）随机负载均衡</li>
